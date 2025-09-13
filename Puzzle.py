@@ -1,4 +1,6 @@
-
+##integrantes 
+#manuel alejandro amezola chaidez
+# Gabriel Alexander Romero Aguilar
 import tkinter as tk
 from tkinter import messagebox
 import heapq
@@ -178,4 +180,5 @@ if __name__ == "__main__":
     root = tk.Tk()
     app = Puzzle(root)
     root.mainloop()
+
 
