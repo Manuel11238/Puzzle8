@@ -1,1 +1,413 @@
+:- dynamic si/1, no/1.
 
+
+
+% Hechos
+
+
+% predunta_Diagnostico(Sintoma, Pregunta).
+
+
+% Síntomas Físicos y Locales
+
+pregunta_Diagnostico(tos_persistente, "Tiene una tos persistente?").
+
+pregunta_Diagnostico(tos_productiva_esputo, "La tos es productiva con flema de color (amarillo, verde o sangre)?").
+
+pregunta_Diagnostico(tos_seca_o_productiva, "Tiene tos (seca o con flema)?").
+
+pregunta_Diagnostico(dificultad_respiratoria, "Tiene dificultad para respirar o falta de aliento aguda?").
+
+pregunta_Diagnostico(falta_de_aliento, "Siente que requiere más esfuerzo para respirar, incluso en reposo?").
+
+pregunta_Diagnostico(dolor_pecho, "Tiene dolor en el pecho al respirar profundamente o toser?").
+
+pregunta_Diagnostico(opresion_en_pecho, "Siente opresion o presion en el pecho?").
+
+pregunta_Diagnostico(sibilancias, "Tiene sibilancias (un silbido o chirrido al respirar)?").
+
+pregunta_Diagnostico(dolor_garganta, "Tiene dolor de garganta o picazón al tragar?").
+
+pregunta_Diagnostico(congestion_nasal, "Tiene congestion o secreción nasal abundante?").
+
+pregunta_Diagnostico(estornudos, "Tiene estornudos frecuentes?").
+
+pregunta_Diagnostico(secrecion_mucosa, "Tiene secrecion mucosa o flema abundante?").
+
+
+
+% Síntomas Sistémicos
+
+pregunta_Diagnostico(fiebre_alta, "Tiene fiebre alta (mas de 38.5°C)?").
+
+pregunta_Diagnostico(escalofrios, "Ha tenido escalofrios intensos o temblores?").
+
+pregunta_Diagnostico(fatiga, "Se siente fatigado, con baja energia o malestar general?").
+
+pregunta_Diagnostico(dolor_corporal, "Tiene dolor corporal o muscular generalizado?").
+
+pregunta_Diagnostico(dolor_cabeza, "Tiene dolor de cabeza intenso?").
+
+pregunta_Diagnostico(sudoracion, "Tiene sudoracion nocturna o excesiva?").
+
+pregunta_Diagnostico(confusión, "Tiene confusion o desorientacion (especialmente si es una persona mayor)?").
+
+pregunta_Diagnostico(perdida_apetito, "Ha experimentado perdida de apetito o nauseas/vomitos?").
+
+pregunta_Diagnostico(falta_De_olfato_y_gusto, "Ha experimentado perdida reciente del olfato o del gusto?").
+
+
+
+% Síntomas de Vías Altas y Criterios Específicos
+
+pregunta_Diagnostico(dificultad_al_tragar, "Siente incomodidad o dolor al tragar?").
+
+pregunta_Diagnostico(ganglios_inflamados, "Tiene ganglios linfaticos sensibles o inflamados en el cuello?").
+
+pregunta_Diagnostico(enrojecimiento_glanglios, "Tiene enrojecimiento notable en la parte posterior de la garganta?").
+
+pregunta_Diagnostico(ronquera, "Su voz suena ronca o apagada?").
+
+pregunta_Diagnostico(sequedad_boca, "Tiene sequedad en la boca o garganta?").
+
+
+
+% Criterios Específicos de las Reglas de Derivación
+
+pregunta_Diagnostico(antecedentes_fumar, "Tiene antecedentes de tabaquismo o exposicion cronica al humo?").
+
+pregunta_Diagnostico(enfermedades_respiratorias_frecuentes, "Ha tenido enfermedades respiratorias frecuentes en el pasado?").
+
+pregunta_Diagnostico(crepitantes_auscultacion, "Se le han detectado ruidos de crepitantes o soplos en la auscultacion pulmonar?").
+
+pregunta_Diagnostico(tos_noche_ejercicio, "La tos empeora notablemente por la noche o al hacer ejercicio?").
+
+pregunta_Diagnostico(antecedentes_alergia_atopia, "Tiene antecedentes personales o familiares de asma, alergias o eczema (atopia)?").
+
+pregunta_Diagnostico(infeccion_previa_tracto_superior, "Tuvo un resfriado o infeccion del tracto superior hace poco (dias o semanas)?").
+
+pregunta_Diagnostico(sintomas_menos_3_semanas, "La tos y sintomas respiratorios duran menos de tres semanas?").
+
+pregunta_Diagnostico(signos_consolidacion_rx, "Se le detectaron signos de consolidacion pulmonar en una radiografía reciente?").
+
+
+
+
+
+% Reglas de derivación
+
+
+
+
+
+%  NEUMONÍA
+
+    regla_derivacion(neumonia, 0.85) :-  % Factor de certeza  
+
+    verificar(fiebre_alta),
+
+    verificar(tos_productiva_esputo),
+
+    verificar(dificultad_respiratoria),
+
+    % Criterios de Soporte Clave
+
+    (verificar(dolor_pecho);
+
+        verificar(confusión);
+
+        verificar(crepitantes_auscultacion)
+
+    ), !.
+
+
+
+%  ASMA
+
+regla_derivacion(asma, 0.90) :-
+
+    verificar(sibilancias),
+
+    verificar(opresion_en_pecho),
+
+    verificar(tos_noche_ejercicio),
+
+    verificar(antecedentes_alergia_atopia), !.
+
+
+
+%  EPOC
+
+regla_derivacion(epoc, 0.80) :-
+
+    verificar(antecedentes_fumar),
+
+    verificar(falta_de_aliento),
+
+    verificar(tos_persistente),
+
+    verificar(opresion_en_pecho),
+
+    verificar(enfermedades_respiratorias_frecuentes), !.
+
+
+
+%  COVID-19
+
+    regla_derivacion(covid_19, 0.78) :-
+
+    verificar(falta_De_olfato_y_gusto),
+
+    verificar(dolor_cabeza),
+
+    verificar(fatiga),
+
+    % Al menos dos de los siguientes:
+
+    ( verificar(fiebre_alta);
+
+        verificar(dolor_corporal);
+
+        verificar(tos_persistente)
+
+    ), !.
+
+
+
+%  GRIPE
+
+regla_derivacion(gripe, 0.70) :-
+
+    verificar(fiebre_alta),
+
+    verificar(dolor_corporal),
+
+    verificar(escalofrios),
+
+    verificar(fatiga),
+
+   
+
+    \+ verificar(dificultad_respiratoria), !.
+
+
+
+%  BRONQUITIS AGUDA
+
+regla_derivacion(bronquitis_aguda, 0.75) :-
+
+    verificar(tos_seca_o_productiva),
+
+    verificar(infeccion_previa_tracto_superior),
+
+    verificar(sintomas_menos_3_semanas),
+
+    \+ verificar(signos_consolidacion_rx),
+
+    \+ verificar(dificultad_respiratoria),
+
+    verificar(opresion_en_pecho), !.
+
+
+
+%  FARINGITIS
+
+regla_derivacion(faringitis, 0.65) :-
+
+    verificar(dolor_garganta),
+
+    verificar(dificultad_al_tragar),
+
+    verificar(ganglios_inflamados),
+
+    \+ verificar(dificultad_respiratoria),
+
+    \+ verificar(falta_De_olfato_y_gusto), !.
+
+
+
+%  RESFRIADO COMÚN
+
+regla_derivacion(resfriado_comun, 0.60) :-
+
+    verificar(congestion_nasal),
+
+    verificar(estornudos),
+
+    verificar(secrecion_mucosa),
+
+    \+ verificar(fiebre_alta),
+
+    \+ verificar(dificultad_respiratoria), !.
+
+
+
+
+
+
+
+
+
+% Ejecicion principal
+
+iniciar_diagnostico :-
+
+    limpiar_respuestas,
+
+    writeln("--- Diagnostico Respiratorio ---"),
+
+    writeln("Responda con un 'si' o 'no' a las siguientes preguntas."),
+
+    nl,
+
+  
+    predecir(ResultadoFinal),
+
+    write('RESULTADO: '),
+
+    write(ResultadoFinal),
+
+    write('.'), nl, nl,
+
+    !.
+
+% Manejo de Incertidumbre
+
+
+
+predecir(ResultadoFinal) :-
+
+    % Encuentra todas las posibles conclusiones (Enfermedad, FC)
+
+    findall( (Enfermedad, FC),
+
+             regla_derivacion(Enfermedad, FC),
+
+             ListaDiagnosticos ),
+
+
+    % Filtra solo los que tienen un FC > 0.6
+
+    filtra_confianza(ListaDiagnosticos, DiagnosticosConfiables),
+
+
+
+    (DiagnosticosConfiables = [] ->
+
+        ResultadoFinal = 'Ningun diagnostico alcanza un Factor de Certeza significativo.'
+
+    ;
+
+        %  Ordena la lista y toma el diagnóstico con el FC mas alto.
+
+        sort_by_fc(DiagnosticosConfiables, [TopDiagnostico|_Resto]),
+
+        formato_resultado(TopDiagnostico, ResultadoFinal)
+
+    ).
+
+% funciones para el factor de certeza
+
+
+ filtra_confianza([], []).
+
+ filtra_confianza([(E, FC) | Resto], [(E, FC) | Resultado]) :-
+
+    FC >= 0.60,
+
+    filtra_confianza(Resto, Resultado).
+
+ filtra_confianza([_ | Resto], Resultado) :-
+
+    filtra_confianza(Resto, Resultado).
+
+
+
+sort_by_fc(Lista, Sorted) :-
+
+    % Invierte la tupla a (FC, Enfermedad) para ordenar por FC, luego invierte para el formato final
+
+    maplist(invertir_tupla, Lista, ListaInvertida),
+
+    keysort(ListaInvertida, SortedAsc),
+
+    reverse(SortedAsc, SortedDesc),
+
+    maplist(invertir_tupla, SortedDesc, Sorted).
+
+
+
+invertir_tupla((E, FC), (FC-E)).
+
+invertir_tupla((FC-E), (E, FC)).
+
+
+
+formato_resultado((Enfermedad, FC), Resultado) :-
+
+    format(atom(Resultado), '~w con Factor de Certeza: ~2f', [Enfermedad, FC]).
+
+
+
+% Verificacion
+
+
+
+verificar(Caracteristica) :-
+
+    si(Caracteristica), !.
+
+verificar(Caracteristica) :-
+
+    no(Caracteristica), !, fail.
+
+verificar(Caracteristica) :-
+
+    preguntar(Caracteristica).
+
+
+
+
+
+
+
+preguntar(Sintoma) :-
+
+    pregunta_Diagnostico(Sintoma, Texto),
+
+    repetir_pregunta(Sintoma, Texto).
+
+
+
+repetir_pregunta(Sintoma, Texto) :-
+
+    write(Texto), write(' (si/no): '),
+
+    read_line_to_string(user_input, Resp),
+
+    string_lower(Resp, Respuesta),
+
+    nl,
+
+    (Respuesta = "si" ->
+
+        assertz(si(Sintoma))
+
+    ; Respuesta = "no" ->
+
+        assertz(no(Sintoma)), fail
+
+    ; writeln("Por favor, responde solo con 'si' o 'no'."),
+
+      repetir_pregunta(Sintoma, Texto)
+
+    ).
+limpiar_respuestas :-
+
+    retract(si(_)), fail.
+
+limpiar_respuestas :-
+
+    retract(no(_)), fail.
+
+limpiar_respuestas.
