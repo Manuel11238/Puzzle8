@@ -3,7 +3,7 @@ Carrera: Ingeniería en Sistemas Computacionales
 Materia: Inteligencia Artificial
 Profesor: Zuriel Dathan Mora Félix
 Herramientas: swi Prolog
-Equipo: Manuel Alejandro Amezola Chaidez, Gabriel 
+Equipo: Manuel Alejandro Amezola Chaidez, Gabriel Alexander Romero Aguilar.
 
 Descripcion:
 Sistema experto desarrollado en prolog y python, el cual buasca ayudar en el diagnostico de engfermedades respiratorias.
