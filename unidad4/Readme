@@ -1,0 +1,32 @@
+PROYECTO MODULO IV
+Este proyecto es un sistema de detección de emociones usando una CNN entrenada sobre el dataset FER2013.
+Amezola Chaidez Manuel Alejandro
+Romero Aguilar Gabriel Alexander
+
+Este sistema detecta emociones en rostros humanos a partir de imágenes, utiliza una CNN entrenadad con
+FER2013 y utiliza el clasificador Haar Cascade para detectar los reostros.
+
+
+-cnn_modelo.py: Define la arquitectura de la CNN Deep_Emotion.
+- data_loaders.py: Carga y preprocesa las imágenes para PyTorch.
+- config.py: Configuración global de rutas, hiperparámetros y etiquetas.
+- entrenarModelo.py: Script para entrenar el modelo.
+- preProcesarDataset.py: Preprocesa y aumenta el dataset usando Albumentations y FiftyOne.
+- webCam_DTEmociones.py: Realiza inferencia en tiempo real usando la webcam.
+- haarcascade_frontalface_default.xml: Archivo XML para la detección de rostros con OpenCV.
+- fer2013_raw/: Carpeta con el dataset original (train/test).
+
+Librerías necesarias:
+- Python 3.8+
+- PyTorch: Framework principal para deep learning.
+- Torchvision: Transforms y utilidades para imágenes.
+- Albumentations: Aumento de datos para imágenes.
+- FiftyOne: Visualización y manejo de datasets.
+- OpenCV: Detección de rostros y manejo de imágenes.
+- Pillow: Procesamiento de imágenes.
+- NumPy: Operaciones numéricas.
+
+FER2013: Dataset de emociones faciales con imágenes de 48x48 píxeles en escala de grises, dividido en carpetas por emoción (angry, disgust, fear, happy, neutral, sad, surprise).
+Aunque nosotros solo usamos angry, happy, neutral y sad.
+  Link Dataset: https://www.kaggle.com/datasets/msambare/fer2013
+- Haar Cascade: Se utiliza el archivo haarcascade_frontalface_default.xml de OpenCV para la detección de rostros en imágenes y video.
